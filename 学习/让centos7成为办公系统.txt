@@ -1,0 +1,92 @@
+1.调整linux终端背景颜色
+打开终端，菜单里选 编辑->配置文件首选项->颜色，取消勾选“使用系统主题中的颜色”,点击背景颜色，选择自定义，加上淡绿色“#CCE8CF”
+2.设置语言和输入法
+在用户的配置文件/home/oracle/.bash_profile追加：export LANG=zh_CN.UTF8
+安装google拼音输入法
+下载地址
+http://code.google.com/p/libgooglepinyin/downloads/list
+下载libgooglepinyin-0.1.1.tar.bz2和ibus-googlepinyin-0.1.2.tar.bz2
+安装命令如下
+yum install libpinyin.x86_64 libpinyin-data.x86_64 libpinyin-devel.x86_64 ibus-devel.x86_64 ibus-pygtk2.noarch  
+tar xvf libgooglepinyin-0.1.2.tar.bz2
+tar xvf ibus-googlepinyin-0.1.2.tar.bz2
+cd libgooglepinyin-0.1.2/
+mkdir build
+cd build/
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+make
+sudo make install
+cd ../../ibus-googlepinyin/
+mkdir build
+cd build/
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+make
+sudo make install
+执行下面的命令测试（无错误输入为成功，按ctrl+c 结束）
+/usr/share/ibus-googlepinyin/main.py
+重启ibus服务
+ibus restart
+用户注销后，可以通过GNOME的设置->语言中，添加GooglePinyin了。
+
+3.安装邮件客户端thunderbird（rpm安装的thunderbird有bug：信息发送成功后保存到“已发送”文件夹需要很久）
+rpm -Uvh http://ftp.linux.ncsu.edu/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+yum install thunderbird
+thunderbird设置邮件签名
+以HTML的方式设置签名，可用QQ邮箱设置好的签名，转换为HTML格式，修改图片来源：src=file://本地路径
+4.安装firefox的adobe插件
+rpm -Uvh http://linuxdownload.adobe.com/adobe-release/adobe-release-x86_64-1.0-1.noarch.rpm
+yum install flash-plugin
+5.安装LibreOffice（对图片的排放支持的很不好，标题在右栏的导航）
+wget http://mirrors.ustc.edu.cn/tdf/libreoffice/stable/5.0.3/rpm/x86_64/LibreOffice_5.0.3_Linux_x86-64_rpm.tar.gz
+tar zxf LibreOffice_5.0.3_Linux_x86-64_rpm.tar.gz
+cd LibreOffice_5.0.3.2_Linux_x86-64_rpm/RPMS
+rpm -Uvh libreoffice5.0-impress-5.0.3.2-2.x86_64.rpm libreoffice5.0-base-5.0.3.2-2.x86_64.rpm libreoffice5.0-calc-5.0.3.2-2.x86_64.rpm libreoffice5.0-5.0.3.2-2.x86_64.rpm libreoffice5.0-draw-5.0.3.2-2.x86_64.rpm libreoffice5.0-math-5.0.3.2-2.x86_64.rpm libreoffice5.0-writer-5.0.3.2-2.x86_64.rpm libobasis5.0-impress-5.0.3.2-2.x86_64.rpm libobasis5.0-base-5.0.3.2-2.x86_64.rpm libobasis5.0-calc-5.0.3.2-2.x86_64.rpm libreoffice5.0-ure-5.0.3.2-2.x86_64.rpm libobasis5.0-core-5.0.3.2-2.x86_64.rpm libobasis5.0-images-5.0.3.2-2.x86_64.rpm libobasis5.0-draw-5.0.3.2-2.x86_64.rpm libobasis5.0-math-5.0.3.2-2.x86_64.rpm libobasis5.0-writer-5.0.3.2-2.x86_64.rpm libreoffice5.0-freedesktop-menus-5.0.3-2.noarch.rpm
+#安装LibreOffice中文插件
+wget http://mirrors.ustc.edu.cn/tdf/libreoffice/stable/5.0.3/rpm/x86_64/LibreOffice_5.0.3_Linux_x86-64_rpm_langpack_zh-CN.tar.gz
+tar zfx LibreOffice_5.0.3_Linux_x86-64_rpm_langpack_zh-CN.tar.gz
+cd LibreOffice_5.0.3.2_Linux_x86-64_rpm_langpack_zh-CN/RPMS
+rpm -Uvh *
+6.使用ntfs-3g挂载NTFS分区
+yum install ntfs-3g-devel ntfs-3g -y
+mount -r /dev/sad1 /WIN10
+7.使用alien安装deb包（结果是deb包不支持centos7平台）
+yum install perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker rpm-build
+#如果make时报错，应该还要安装以下包
+#yum -y install python-libs python-wnck
+wget http://ftp.de.debian.org/debian/pool/main/a/alien/alien_8.95.tar.xz
+tar xpvf alien_8.95.tar.xz
+cd alien-8.95/
+perl Makefile.PL
+make && make install
+ll /home/oracle/下载/
+alien -r /home/oracle/下载/google-chrome-stable_current_amd64.deb
+9.安装WPS（WPS对标题支持的很不好）
+#centos7默认安装了libpng15，但是WPS要求更低版本的libpng
+yum install libpng12.x86_64
+#版本选择地址：http://community.wps.cn/download/，下载地址：kdl.cc.ksosoft.com/wps-community/download/a19/wps-office-9.1.0.4975-1.a19p1.x86_64.rpm
+rpm -Uvh wps-office-9.1.0.4975-1.a19p1.x86_64.rpm
+#安装字体包，如果需要的话
+rpm -Uvh http://kdl.cc.ksosoft.com/wps-community/download/a15/wps-office-fonts-1.0-1.noarch.rpm
+9.安装chrome
+选择版本：http://www.google.cn/intl/zh-CN/chrome/browser/desktop/index.html
+下载地址：https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+安装rpm依赖
+yum install lsb libXScrnSaver
+rpm -Uvh google-chrome-stable_current_x86_64.rpm
+10.安装pycharm
+下载专业版pycharm-professional-5.0.2.tar.gz
+https://d1opms6zj7jotq.cloudfront.net/python/pycharm-professional-5.0.2.tar.gz
+下载社区版https://d1opms6zj7jotq.cloudfront.net/python/pycharm-community-5.0.2.tar.gz
+安装java
+选择版本：http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+下载地址：http://download.oracle.com/otn-pub/java/jdk/8u66-b17/jdk-8u66-linux-x64.rpm?AuthParam=1450228871_c8a2f237ed87a896fe30f808527bfaf2
+安装jdk-8u66
+rpm -Uvh jdk-8u66-linux-x64.rpm
+echo -e 'JAVA_HOME=/usr/java/jdk1.8.0_66\nCLASSPATH=.:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dt.jar\nPATH=$JAVA_HOME/bin:$PATH\nexport JAVA_HOME PATH CLASSPATH' >> /etc/profile
+source /etc/profile
+解压pycharm-professional-5.0.2.tar.gz
+tar zxf pycharm-professional-5.0.2.tar.gz
+启动
+pycharm-5.0.2/bin/pycharm.sh
+
+参考 用CentOS 7打造合适的科研环境 ：http://seisman.info/linux-environment-for-seismology-research.html
